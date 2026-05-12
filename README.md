@@ -1,6 +1,6 @@
-# Competitor Analysis Agent
+# Competitor Analysis Workflow
 
-An AI-powered agent that researches your competitive landscape and generates a branded PDF report — automatically. Works for any company.
+An AI-powered workflow that researches your competitive landscape and generates a branded PDF report — automatically. Works for any company.
 
 Built on the **WAT framework**: Workflows define the SOP, Claude orchestrates decisions, Python tools execute deterministically.
 
