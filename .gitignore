@@ -1,0 +1,26 @@
+# Secrets — never commit these
+.env
+credentials.json
+token.json
+*.pickle
+
+# Temporary processing files — regenerate as needed
+.tmp/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/

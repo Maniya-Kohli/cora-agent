@@ -1,0 +1,92 @@
+company:
+  name: Merced
+  tagline: "The intelligence layer for trading agents"
+  website: https://merced.pro
+  industry: "Crypto / Web3 infrastructure — autonomous AI agent infrastructure"
+  description: >
+    Merced is the intelligence layer for autonomous trading agents. It provides
+    three machine-readable APIs: Evaluate (pre-trade scoring engine that returns
+    a confidence score, risk breakdown, and execution recommendation), Verify
+    (on-chain performance registry built on ERC-8004 with cryptographically
+    attested agent metrics), and Simulate (strategy sandbox for rehearsing against
+    historical cross-chain conditions). Merced Pro is an in-house autonomous trading
+    agent running live on the evaluation stack — its trades feed back into the
+    evaluation engine as a data flywheel and moat.
+  target_market: >
+    Primary: builders of autonomous trading agents — developers shipping AI agents
+    that trade arbitrage, perpetuals, and prediction markets across chains.
+    Secondary: protocols and end users who want trustless verification of whether
+    a trading agent is profitable before allocating to it.
+  products:
+    - name: Evaluate
+      description: Pre-trade scoring engine. Agents submit an opportunity and receive a confidence score, risk breakdown, and execution recommendation.
+    - name: Verify
+      description: On-chain performance registry on ERC-8004. Cryptographically attested agent metrics (Sharpe ratio, max drawdown, win rate, PnL).
+    - name: Simulate
+      description: Strategy sandbox. Agents rehearse against historical cross-chain conditions (MEV, gas spikes, slippage, latency).
+    - name: Merced Pro
+      description: In-house autonomous trading agent. Arbitrages agent jobs, trades prediction markets, runs perps across chains.
+
+known_competitors:
+  - name: OKX
+    url: https://www.okx.com
+    category: data_and_execution
+    notes: "Pipes without intelligence — price feeds and execution infrastructure"
+  - name: Alchemy
+    url: https://www.alchemy.com
+    category: data_and_execution
+    notes: "Web3 development platform — infrastructure layer, not evaluation"
+  - name: Injective
+    url: https://injective.com
+    category: data_and_execution
+    notes: "DeFi infrastructure chain — execution pipes, not scoring intelligence"
+  - name: Virtuals Protocol
+    url: https://www.virtuals.io
+    category: ai_agent_platform
+    notes: "AI agent platform layer — competes on agent infrastructure, not evaluation"
+  - name: Olas (Autonolas)
+    url: https://olas.network
+    category: ai_agent_platform
+    notes: "Decentralized AI agent network — platform layer competitor"
+  - name: Fetch.ai
+    url: https://fetch.ai
+    category: ai_agent_platform
+    notes: "AI and multi-agent systems for DeFi — platform layer"
+  - name: QuantConnect
+    url: https://www.quantconnect.com
+    category: backtesting_quant
+    notes: "Traditional quant backtesting — not agent-native or on-chain-verifiable"
+
+brand:
+  logo:
+    description: "Red circle (left) overlapping a dark maroon square (right) — the Merced icon. Wordmark is 'merced.' in bold white lowercase with trailing period."
+    primary_icon_color: "#ff4d4d"
+    square_color: "#7a1515"
+    icon_background: "#0a0a0a"
+    svg_path: ".tmp/merced_logo.svg"
+    png_path: ".tmp/merced_logo.png"
+    note: "Save the actual logo PNG to .tmp/merced_logo.png for highest fidelity in the PDF. SVG fallback is used otherwise."
+  colors:
+    primary_accent: "#ff4d4d"       # Merced red — CTAs, logo, key highlights
+    background: "#0a0a0a"           # Near-black page background
+    surface: "#0d0d0d"              # Card/panel background
+    border: "#2a2a2a"               # Subtle borders
+    foreground: "#ffffff"           # Primary text
+    muted: "#9ca3af"                # Secondary/subdued text
+    emerald: "#00d294"              # Positive / profit indicators
+    amber: "#f99c00"                # Warning / caution indicators
+    blue: "#54a2ff"                 # Info / link color
+  typography:
+    primary_font: "PP Neue Montreal"
+    weights:
+      - Bold
+      - Medium
+      - Book
+    fallback: "Inter, system-ui, sans-serif"
+    style_notes: >
+      Dark theme. Heavy use of near-black backgrounds with white text.
+      Red accent (#ff4d4d) used sparingly for CTAs and key callouts.
+      Clean, technical, minimal — crypto-native aesthetic.
+
+google_drive:
+  reports_folder_name: "Merced Competitor Analysis Reports"
