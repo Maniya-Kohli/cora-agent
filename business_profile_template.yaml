@@ -1,0 +1,68 @@
+# Competitor Analysis Agent — Business Profile Template
+# Copy this file to business_profile.yaml and fill in your company details.
+# This is the single source of truth for all report generation and branding.
+
+company:
+  name: "Acme Corp"                              # Your company name
+  tagline: "One-line description of what you do" # Shown on report cover
+  website: https://example.com
+  industry: "SaaS / B2B software"               # Used to guide competitor search
+  description: >
+    Write 2-4 sentences describing your company: what you build, how it works,
+    what problem it solves, and what makes it unique. This is used by the AI to
+    understand your positioning before researching competitors.
+  target_market: >
+    Describe your primary customers: who they are, what they need, and why they
+    come to you. Also note any secondary markets. Used to assess competitor threat levels.
+  products:
+    - name: Product A
+      description: One sentence on what it does.
+    - name: Product B
+      description: One sentence on what it does.
+    # Add more products as needed
+
+known_competitors:
+  # List competitors you already know about. The agent will discover more automatically.
+  # Remove the examples and add your real competitors.
+  - name: Competitor One
+    url: https://competitor-one.com
+    category: direct            # direct | adjacent | indirect
+    notes: "One sentence on why they compete with you"
+  - name: Competitor Two
+    url: https://competitor-two.com
+    category: adjacent
+    notes: "One sentence on why they compete with you"
+  # Add more as needed
+
+brand:
+  logo:
+    description: "Brief description of your logo"
+    png_path: ".tmp/logo.png"   # Place your logo PNG here for best results in the PDF
+    # If no PNG is provided, the report will use your company name as a text logo
+  colors:
+    primary_accent: "#4a6cf7"   # Your brand color — used for headers and highlights
+    background:     "#ffffff"   # Page background (use dark hex like #0a0a0a for dark theme)
+    surface:        "#f8f9fa"   # Card/panel background
+    border:         "#e5e7eb"   # Subtle borders
+    foreground:     "#111827"   # Primary text color
+    muted:          "#6b7280"   # Secondary/subdued text
+    emerald:        "#10b981"   # Positive/success indicators
+    amber:          "#f59e0b"   # Warning/caution indicators
+    blue:           "#3b82f6"   # Info/link color
+  # Dark theme example (uncomment and adjust):
+  # colors:
+  #   primary_accent: "#ff4d4d"
+  #   background:     "#0a0a0a"
+  #   surface:        "#0d0d0d"
+  #   border:         "#2a2a2a"
+  #   foreground:     "#ffffff"
+  #   muted:          "#9ca3af"
+  #   emerald:        "#00d294"
+  #   amber:          "#f99c00"
+  #   blue:           "#54a2ff"
+  typography:
+    primary_font: "Inter"       # Note: only standard fonts (Helvetica, Times) are guaranteed to render
+    fallback: "Helvetica, sans-serif"
+
+google_drive:
+  reports_folder_name: "Competitor Analysis Reports"  # Folder name in your Google Drive

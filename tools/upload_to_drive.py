@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Google Drive upload tool for Merced competitor analysis reports.
-Finds or creates the target folder, uploads the PDF, returns the shareable link.
+Google Drive upload tool for competitor analysis reports.
+Finds or creates the target folder (from business_profile.yaml), uploads the PDF,
+returns the shareable link. Works for any company profile.
 """
 
 import argparse
@@ -110,7 +111,7 @@ def make_shareable(service, file_id: str) -> str:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Upload Merced PDF report to Google Drive")
+    parser = argparse.ArgumentParser(description="Upload competitor analysis PDF report to Google Drive")
     parser.add_argument("pdf_path", nargs="?", help="Path to the PDF file to upload")
     parser.add_argument(
         "--profile",
@@ -132,14 +133,15 @@ def main():
     with open(args.profile) as f:
         profile = yaml.safe_load(f)
 
+    company_name = profile.get("company", {}).get("name", "Company")
     folder_name = args.folder or profile.get("google_drive", {}).get(
-        "reports_folder_name", "Merced Competitor Analysis Reports"
+        "reports_folder_name", f"{company_name} Competitor Analysis Reports"
     )
 
     if not args.pdf_path:
         # Find the most recent PDF in .tmp/
         tmp = ROOT / ".tmp"
-        pdfs = sorted(tmp.glob("merced_competitor_analysis_*.pdf"))
+        pdfs = sorted(tmp.glob("*_competitor_analysis_*.pdf"))
         if not pdfs:
             print("ERROR: No PDF found in .tmp/. Run generate_report_pdf.py first.", file=sys.stderr)
             sys.exit(1)

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-Competitor research tool for Merced.
+Competitor research tool.
 Reads business_profile.yaml, discovers + researches competitors via web search,
 synthesizes findings with Claude, and writes .tmp/competitor_research.json.
+Works for any company — company name, industry, and description drive all searches.
 """
 
 import json
@@ -53,10 +54,11 @@ def discover_additional_competitors(company: dict, known_names: list[str]) -> li
     """Use web search + Claude to find competitors not already in the known list."""
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
+    industry = company.get("industry", "")
     search_queries = [
         f"{company['name']} competitors alternatives 2025",
-        f"AI trading agent intelligence evaluation platform crypto 2025",
-        f"on-chain agent performance registry ERC-8004 alternatives",
+        f"{industry} top companies platforms 2025",
+        f"{company['tagline']} alternatives competitors",
     ]
 
     search_results = []
@@ -269,7 +271,7 @@ Return plain text bullet points starting with •. No headers, no JSON."""
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Research Merced competitors")
+    parser = argparse.ArgumentParser(description="Research competitors for any company")
     parser.add_argument(
         "--profile",
         default=str(ROOT / "business_profile.yaml"),

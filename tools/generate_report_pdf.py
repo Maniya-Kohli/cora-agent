@@ -313,7 +313,7 @@ def build_landscape_table(profiles: list, styles: dict) -> list:
     return story
 
 
-def build_competitor_deep_dives(profiles: list, styles: dict) -> list:
+def build_competitor_deep_dives(profiles: list, styles: dict, company_name: str) -> list:
     story = [
         Paragraph("Competitor Deep Dives", styles["section_header"]),
         HRFlowable(width=CONTENT_W, thickness=0.5, color=C_BORDER, spaceAfter=10),
@@ -322,11 +322,10 @@ def build_competitor_deep_dives(profiles: list, styles: dict) -> list:
     for p in profiles:
         name = p.get("name", "Unknown")
         threat = p.get("threat_level", "—")
-        threat_label = f"Threat: {threat}"
 
         block = [
             Paragraph(name, styles["subsection_header"]),
-            Paragraph(threat_label, threat_style(threat, styles)),
+            Paragraph(f"Threat: {threat}", threat_style(threat, styles)),
             Spacer(1, 3),
             Paragraph(p.get("overview", ""), styles["body"]),
         ]
@@ -340,12 +339,12 @@ def build_competitor_deep_dives(profiles: list, styles: dict) -> list:
         block.append(Paragraph(p.get("pricing", "Not publicly available"), styles["body_muted"]))
 
         if p.get("strengths"):
-            block.append(Paragraph(f"Strengths vs. {p.get('_our_company', 'Us')}", styles["label"]))
+            block.append(Paragraph(f"Strengths vs. {company_name}", styles["label"]))
             for item in p["strengths"]:
                 block.append(Paragraph(f"• {item}", styles["bullet"]))
 
         if p.get("weaknesses"):
-            block.append(Paragraph(f"Weaknesses vs. {p.get('_our_company', 'Us')}", styles["label"]))
+            block.append(Paragraph(f"Weaknesses vs. {company_name}", styles["label"]))
             for item in p["weaknesses"]:
                 block.append(Paragraph(f"• {item}", styles["bullet"]))
 
@@ -365,56 +364,44 @@ def build_competitor_deep_dives(profiles: list, styles: dict) -> list:
     return story
 
 
-def build_comparison_table(profiles: list, styles: dict) -> list:
+def build_comparison_table(profiles: list, styles: dict, company_name: str, our_products: list) -> list:
     story = [
         Paragraph("Product / Service Comparison", styles["section_header"]),
         HRFlowable(width=CONTENT_W, thickness=0.5, color=C_BORDER, spaceAfter=10),
     ]
 
-    dimensions = [
-        "Pre-trade scoring / evaluation",
-        "On-chain performance registry",
-        "Strategy backtesting / simulation",
-        "Agent marketplace",
-        "Live production agent",
-        "API-first / machine-readable",
-        "Cross-chain support",
-    ]
+    # Build dimensions from our product names
+    dimensions = [p["name"] for p in our_products] if our_products else ["Core product"]
 
-    merced_capabilities = {
-        "Pre-trade scoring / evaluation": "Yes (Evaluate API)",
-        "On-chain performance registry": "Yes (Verify / ERC-8004)",
-        "Strategy backtesting / simulation": "Yes (Simulate sandbox)",
-        "Agent marketplace": "Yes (ERC-8004 marketplace)",
-        "Live production agent": "Yes (Merced Pro)",
-        "API-first / machine-readable": "Yes",
-        "Cross-chain support": "Yes",
-    }
+    # Our capabilities column: "Yes (<product name>)" for each dimension
+    our_capabilities = {}
+    for prod in our_products:
+        our_capabilities[prod["name"]] = f"Yes ({prod['name']})"
 
     top_competitors = profiles[:5]
-    col_names = ["Capability", "Merced"] + [p.get("name", "—") for p in top_competitors]
+    col_names = ["Capability", company_name] + [p.get("name", "—") for p in top_competitors]
     col_count = len(col_names)
     col_w = CONTENT_W / col_count
 
     rows = [[Paragraph(h, styles["table_header"]) for h in col_names]]
     for dim in dimensions:
         row = [Paragraph(dim, styles["table_cell"])]
-        merced_val = merced_capabilities.get(dim, "—")
-        row.append(Paragraph(merced_val, styles["table_cell"]))
+        row.append(Paragraph(our_capabilities.get(dim, "Yes"), styles["table_cell"]))
         for p in top_competitors:
             products_text = " ".join(p.get("products_services", [])).lower()
             overview_text = p.get("overview", "").lower()
             combined = products_text + " " + overview_text
-            dim_lower = dim.lower()
-            keywords = dim_lower.split("/")
+            keywords = dim.lower().split("/")
             has_it = any(kw.strip() in combined for kw in keywords)
             row.append(Paragraph("Partial" if has_it else "—", styles["table_cell_muted"]))
         rows.append(row)
 
+    # Highlight our column with a slightly tinted background
+    our_col_bg = colors.HexColor("#0f1a14") if C_ACCENT.hexval() == "#00d294ff" else C_SURFACE
     tbl = Table(rows, colWidths=[col_w] * col_count, repeatRows=1)
     tbl.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, 0), C_SURFACE),
-        ("BACKGROUND", (1, 1), (1, -1), colors.HexColor("#0f1a14")),
+        ("BACKGROUND", (1, 1), (1, -1), our_col_bg),
         ("ROWBACKGROUNDS", (0, 1), (-1, -1), [C_BG, C_SURFACE]),
         ("GRID", (0, 0), (-1, -1), 0.4, C_BORDER),
         ("TOPPADDING", (0, 0), (-1, -1), 5),
@@ -462,12 +449,12 @@ def build_pricing_section(profiles: list, styles: dict) -> list:
     return story
 
 
-def build_strategic_gaps(gaps: list, styles: dict) -> list:
+def build_strategic_gaps(gaps: list, styles: dict, company_name: str) -> list:
     story = [
         Paragraph("Strategic Gaps & Recommendations", styles["section_header"]),
         HRFlowable(width=CONTENT_W, thickness=0.5, color=C_BORDER, spaceAfter=10),
         Paragraph(
-            "Areas where competitors are winning that Merced should address, ranked by impact.",
+            f"Areas where competitors are winning that {company_name} should address, ranked by impact.",
             styles["body_muted"],
         ),
         Spacer(1, 6),
@@ -494,7 +481,7 @@ def build_strategic_gaps(gaps: list, styles: dict) -> list:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate Merced branded competitor analysis PDF")
+    parser = argparse.ArgumentParser(description="Generate branded competitor analysis PDF")
     parser.add_argument(
         "--research",
         default=str(TMP / "competitor_research.json"),
@@ -507,8 +494,8 @@ def main():
     )
     parser.add_argument(
         "--output",
-        default=str(TMP / f"merced_competitor_analysis_{date.today().isoformat()}.pdf"),
-        help="Output PDF path",
+        default=None,
+        help="Output PDF path (default: .tmp/<company_slug>_competitor_analysis_YYYY-MM-DD.pdf)",
     )
     args = parser.parse_args()
 
@@ -517,42 +504,59 @@ def main():
     with open(args.profile) as f:
         profile = yaml.safe_load(f)
 
+    # Apply brand colors from profile as module globals
+    brand = load_brand_colors(profile)
+    global C_BG, C_SURFACE, C_BORDER, C_WHITE, C_MUTED, C_ACCENT, C_EMERALD, C_AMBER, C_BLUE
+    C_BG = brand["C_BG"]
+    C_SURFACE = brand["C_SURFACE"]
+    C_BORDER = brand["C_BORDER"]
+    C_WHITE = brand["C_WHITE"]
+    C_MUTED = brand["C_MUTED"]
+    C_ACCENT = brand["C_ACCENT"]
+    C_EMERALD = brand["C_EMERALD"]
+    C_AMBER = brand["C_AMBER"]
+    C_BLUE = brand["C_BLUE"]
+
+    company_name = profile.get("company", {}).get("name", "Company")
+    company_slug = company_name.lower().replace(" ", "_")
+    our_products = profile.get("company", {}).get("products", [])
+    logo_png_path = _get_logo_png_path(profile)
+
+    output_path = args.output or str(TMP / f"{company_slug}_competitor_analysis_{date.today().isoformat()}.pdf")
+
     styles = get_styles()
     profiles = research.get("competitor_profiles", [])
     gaps = research.get("strategic_gaps", [])
 
     doc = BaseDocTemplate(
-        args.output,
+        output_path,
         pagesize=A4,
         leftMargin=MARGIN,
         rightMargin=MARGIN,
         topMargin=MARGIN,
         bottomMargin=MARGIN,
     )
-    doc.addPageTemplates(make_page_template(doc, styles))
+    doc.addPageTemplates(make_page_template(doc, styles, logo_png_path, company_name))
 
-    story = []
-    story += build_cover(research, styles)
-
-    # Switch to content template after cover
     from reportlab.platypus import NextPageTemplate
+    story = []
+    story += build_cover(research, styles, logo_png_path, company_name)
     story.append(NextPageTemplate("content"))
-
     story += build_exec_summary(research, styles)
     story.append(PageBreak())
     story += build_landscape_table(profiles, styles)
     story.append(PageBreak())
-    story += build_competitor_deep_dives(profiles, styles)
+    story += build_competitor_deep_dives(profiles, styles, company_name)
     story.append(PageBreak())
-    story += build_comparison_table(profiles, styles)
+    story += build_comparison_table(profiles, styles, company_name, our_products)
     story.append(PageBreak())
     story += build_pricing_section(profiles, styles)
     story.append(PageBreak())
-    story += build_strategic_gaps(gaps, styles)
+    story += build_strategic_gaps(gaps, styles, company_name)
 
     doc.build(story)
-    print(f"PDF generated: {args.output}")
-    return args.output
+    print(f"PDF generated: {output_path}")
+    return output_path
 
 
 if __name__ == "__main__":
